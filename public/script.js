@@ -21,7 +21,133 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Data ---
+    // --- Electoral Search Logic ---
+    const epicInput = document.getElementById('epic-input');
+    const searchVoterBtn = document.getElementById('search-voter-btn');
+    const searchResults = document.getElementById('search-results');
+
+    searchVoterBtn.addEventListener('click', async () => {
+        const epic = epicInput.value.trim();
+        if (!epic) return;
+
+        searchVoterBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+        
+        try {
+            const response = await fetch('/api/search-voter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ epic })
+            });
+            const data = await response.json();
+            
+            searchResults.classList.remove('hidden');
+            if (data.found) {
+                searchResults.innerHTML = `
+                    <div class="result-item">
+                        <h3 style="color: var(--secondary); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> Voter Found in Roll</h3>
+                        <p><strong>Name:</strong> ${data.details.name}</p>
+                        <p><strong>Age/Gender:</strong> ${data.details.age} / ${data.details.gender}</p>
+                        <p><strong>Assembly Constituency:</strong> ${data.details.ac}</p>
+                        <p><strong>Part No:</strong> ${data.details.part}</p>
+                        <p><strong>Polling Station:</strong> ${data.details.station}</p>
+                    </div>
+                `;
+            } else {
+                searchResults.innerHTML = `
+                    <div class="result-item" style="color: #ef4444;">
+                        <h3><i class="fas fa-times-circle"></i> No record found</h3>
+                        <p>Please check the EPIC number and try again, or register at the NVSP portal.</p>
+                    </div>
+                `;
+            }
+        } catch (err) {
+            console.error("Search failed", err);
+        } finally {
+            searchVoterBtn.innerHTML = '<i class="fas fa-search"></i> Search';
+        }
+    });
+
+    // --- Booth Locator Logic (Google Maps Iframe) ---
+    const findMeBtn = document.getElementById('find-me-btn');
+    const locStatus = document.getElementById('location-status');
+    const mapContainer = document.getElementById('map-container');
+
+    findMeBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            locStatus.textContent = "Geolocation is not supported by your browser.";
+            return;
+        }
+
+        locStatus.textContent = "Locating you...";
+        findMeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            locStatus.textContent = `Found you! Locating booths near ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            
+            // Using Google Maps embed iframe with a search query for nearby polling stations
+            const mapHtml = `<iframe src="https://maps.google.com/maps?q=polling+station+near+${lat},${lng}&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>`;
+            mapContainer.innerHTML = mapHtml;
+            
+            findMeBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Refresh Location';
+        }, () => {
+            locStatus.textContent = "Unable to retrieve your location.";
+            findMeBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Find Booths Near Me';
+        });
+    });
+
+    // --- Incident Reporting Logic ---
+    const incidentForm = document.getElementById('incident-form');
+    const locInput = document.getElementById('incident-location');
+    const refreshLocBtn = document.getElementById('refresh-loc-btn');
+    const reportSuccess = document.getElementById('report-success');
+
+    function getGPSLocation() {
+        if (!navigator.geolocation) {
+            locInput.value = "Geolocation not supported.";
+            return;
+        }
+        locInput.value = "Fetching...";
+        navigator.geolocation.getCurrentPosition((pos) => {
+            locInput.value = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+        }, () => {
+            locInput.value = "Permission denied or unavailable. Enter manually.";
+            locInput.removeAttribute('readonly'); // allow manual if failed
+        });
+    }
+
+    // Auto-fetch on load or when tab clicked
+    document.querySelector('[data-target=report]').addEventListener('click', () => {
+        if(locInput.value === "" || locInput.value.includes("Fetching")) getGPSLocation();
+    });
+    
+    refreshLocBtn.addEventListener('click', getGPSLocation);
+
+    incidentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const type = document.getElementById('incident-type').value;
+        const desc = document.getElementById('incident-desc').value;
+        const loc = locInput.value;
+        
+        const submitBtn = incidentForm.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        
+        try {
+            await fetch('/api/report-incident', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, desc, location: loc })
+            });
+            incidentForm.style.display = 'none';
+            reportSuccess.classList.remove('hidden');
+        } catch (err) {
+            console.error("Report failed", err);
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Secure Report';
+        }
+    });
+
+    // --- Existing Data (Timeline, Steps, Flashcards, Quiz) ---
     const timelineData = [
         { date: 'Phase 1', title: 'Announcement & MCC', desc: 'Election Commission announces schedule. Model Code of Conduct comes into effect.' },
         { date: 'Phase 2', title: 'Nominations', desc: 'Candidates file their nomination papers. Scrutiny and withdrawal period follows.' },
@@ -175,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectOption(selectedIdx, btnElement) {
-        // Disable further clicks
         const allOptions = quizOptionsContainer.querySelectorAll('.quiz-option');
         allOptions.forEach(opt => opt.style.pointerEvents = 'none');
 
@@ -189,7 +314,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btnElement.classList.add('wrong');
             btnElement.innerHTML = `<i class="fas fa-times-circle"></i> ${quizData[currentQuizQ].options[selectedIdx]}`;
             
-            // Highlight correct one
             allOptions[correctIdx].classList.add('correct');
             allOptions[correctIdx].innerHTML = `<i class="fas fa-check-circle"></i> ${quizData[currentQuizQ].options[correctIdx]}`;
         }
@@ -212,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         finalScoreEl.textContent = score;
         
-        // Update circular progress visual
         const deg = (score / quizData.length) * 360;
         document.querySelector('.score-circle').style.setProperty('--score-deg', `${deg}deg`);
 
@@ -244,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
         quizStartPanel.classList.remove('hidden');
         quizStartPanel.classList.add('active');
     });
-
 
     // --- AI Assistant Logic ---
     const assistantToggle = document.getElementById('assistant-toggle');

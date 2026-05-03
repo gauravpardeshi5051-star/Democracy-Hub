@@ -18,6 +18,9 @@
             </div>
             <ul class="nav-links">
                 <li class="active" data-target="home"><i class="fas fa-home"></i> Dashboard</li>
+                <li data-target="search"><i class="fas fa-search"></i> Electoral Search</li>
+                <li data-target="locator"><i class="fas fa-map-marker-alt"></i> Booth Locator</li>
+                <li data-target="report"><i class="fas fa-shield-alt"></i> Report Incident</li>
                 <li data-target="timeline"><i class="fas fa-calendar-alt"></i> Election Phases</li>
                 <li data-target="steps"><i class="fas fa-shoe-prints"></i> Voter Journey</li>
                 <li data-target="flashcards"><i class="fas fa-layer-group"></i> Knowledge Base</li>
@@ -32,24 +35,101 @@
                 <header class="hero">
                     <div class="hero-badge">World's Largest Democracy</div>
                     <h1>Empowering Your <span>Voice</span></h1>
-                    <p>Navigate the Indian Election System with clarity. Learn the process, track phases, and test your civic knowledge.</p>
+                    <p>Navigate the Indian Election System with clarity. Locate your booth, search the electoral roll, report incidents, and test your civic knowledge.</p>
                 </header>
                 
                 <div class="features-grid">
-                    <div class="feature-card" onclick="document.querySelector('[data-target=steps]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-id-card-clip"></i></div>
-                        <h3>Voter Journey</h3>
-                        <p>Step-by-step guide from registration to casting your vote using EVM & VVPAT.</p>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=search]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-search"></i></div>
+                        <h3>Electoral Search</h3>
+                        <p>Dynamically search the simulated electoral roll using your EPIC number.</p>
                     </div>
-                    <div class="feature-card" onclick="document.querySelector('[data-target=flashcards]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-book-reader"></i></div>
-                        <h3>Learn Concepts</h3>
-                        <p>Interactive flashcards covering ECI, Lok Sabha, NOTA, and more.</p>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=locator]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-map-marked-alt"></i></div>
+                        <h3>Booth Locator</h3>
+                        <p>Find polling stations near your location using Google Maps.</p>
                     </div>
-                    <div class="feature-card highlight" onclick="document.querySelector('[data-target=quiz]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-trophy"></i></div>
-                        <h3>Take the Quiz</h3>
-                        <p>Challenge yourself with our award-winning interactive civics quiz.</p>
+                    <div class="feature-card highlight" onclick="document.querySelector('[data-target=report]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-exclamation-triangle"></i></div>
+                        <h3>Report Incident</h3>
+                        <p>Report booth capturing or malpractice securely using your GPS location.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Electoral Search Section -->
+            <section id="search" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Electoral Roll Search</h2>
+                    <p>Verify your details in the voter list.</p>
+                </div>
+                <div class="form-container">
+                    <div class="search-box">
+                        <input type="text" id="epic-input" placeholder="Enter your EPIC Number (e.g., ABC1234567)">
+                        <button id="search-voter-btn" class="btn primary"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                    <div id="search-results" class="results-panel hidden">
+                        <!-- Dynamic results will be injected here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booth Locator Section -->
+            <section id="locator" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Polling Booth Locator</h2>
+                    <p>Find nearby polling stations using Google Maps.</p>
+                </div>
+                <div class="map-wrapper">
+                    <div class="map-controls">
+                        <button id="find-me-btn" class="btn primary"><i class="fas fa-crosshairs"></i> Find Booths Near Me</button>
+                        <span id="location-status">Waiting for location...</span>
+                    </div>
+                    <!-- Google Maps Iframe Container -->
+                    <div class="iframe-container" id="map-container">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <p>Click "Find Booths Near Me" to load the map.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Report Incident Section -->
+            <section id="report" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Report Election Malpractice</h2>
+                    <p>Securely report booth capturing, intimidation, or EVM issues.</p>
+                </div>
+                <div class="form-container">
+                    <form id="incident-form" class="incident-form">
+                        <div class="form-group">
+                            <label>Incident Type</label>
+                            <select id="incident-type" required>
+                                <option value="" disabled selected>Select an issue...</option>
+                                <option value="Booth Capturing">Booth Capturing</option>
+                                <option value="Voter Intimidation">Voter Intimidation</option>
+                                <option value="EVM Malfunction">EVM Malfunction</option>
+                                <option value="Fake Voting">Fake Voting / Impersonation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="incident-desc" rows="4" placeholder="Provide details of the incident..." required></textarea>
+                        </div>
+                        <div class="form-group location-group">
+                            <label>GPS Location <span class="required">*</span></label>
+                            <div class="loc-input-wrapper">
+                                <input type="text" id="incident-location" readonly placeholder="Fetching location automatically..." required>
+                                <button type="button" id="refresh-loc-btn" class="btn secondary small"><i class="fas fa-sync"></i> Refresh</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary large w-100"><i class="fas fa-paper-plane"></i> Submit Secure Report</button>
+                    </form>
+                    <div id="report-success" class="results-panel success hidden">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Report Submitted Successfully</h3>
+                        <p>Your incident report and GPS coordinates have been securely logged.</p>
                     </div>
                 </div>
             </section>
