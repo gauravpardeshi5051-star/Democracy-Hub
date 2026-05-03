@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Democracy Hub: Indian Elections</title>
+    <title>Democracy Hub: India Map & Civic Passport</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -11,6 +11,7 @@
 <body>
     <canvas id="particle-canvas"></canvas>
 
+    <!-- Floating Stats Badge -->
     <div class="democracy-badge" id="democracy-badge">
         <div class="points-label">Democracy Score</div>
         <div class="points-value" id="total-points">0</div>
@@ -26,7 +27,8 @@
             </div>
             <ul class="nav-links">
                 <li class="active" data-target="home"><i class="fas fa-home"></i> Dashboard</li>
-                <li data-target="leaderboard"><i class="fas fa-trophy"></i> Top 50 Rankings</li>
+                <li data-target="pulse"><i class="fas fa-broadcast-tower"></i> Democracy Pulse</li>
+                <li data-target="passport"><i class="fas fa-passport"></i> Civic Passport</li>
                 <li data-target="search"><i class="fas fa-search"></i> Electoral Search</li>
                 <li data-target="locator"><i class="fas fa-map-marker-alt"></i> Booth Locator</li>
                 <li data-target="report"><i class="fas fa-shield-alt"></i> Report Incident</li>
@@ -42,237 +44,145 @@
             <!-- Home Section -->
             <section id="home" class="view-section active">
                 <header class="hero">
-                    <div class="hero-badge">World's Largest Democracy</div>
-                    <h1>Empowering Your <span>Voice</span></h1>
-                    <p>Experience the future of civic education. Earn points, climb the leaderboard, and learn about the world's largest democratic system.</p>
+                    <div class="hero-badge">Next-Gen Civic Platform</div>
+                    <h1>India's <span>Digital</span> Pulse</h1>
+                    <p>Interact with the live democracy map, earn your civic stamps, and become a certified informed citizen.</p>
                 </header>
                 
                 <div class="features-grid">
-                    <div class="feature-card tilt" onclick="document.querySelector('[data-target=leaderboard]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-trophy"></i></div>
-                        <h3>Top 50 Ranking</h3>
-                        <p>See where you stand among the most informed citizens of India.</p>
+                    <div class="feature-card tilt" onclick="document.querySelector('[data-target=pulse]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-map-marked"></i></div>
+                        <h3>Democracy Pulse</h3>
+                        <p>Interact with the 3D heatmap of India to see live civic engagement.</p>
                     </div>
-                    <div class="feature-card tilt" onclick="document.querySelector('[data-target=search]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-search"></i></div>
-                        <h3>Electoral Search</h3>
-                        <p>Verify your voter details and earn +10 points instantly.</p>
+                    <div class="feature-card tilt" onclick="document.querySelector('[data-target=passport]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-passport"></i></div>
+                        <h3>Civic Passport</h3>
+                        <p>Collect digital stamps for your journey towards becoming an expert voter.</p>
                     </div>
                     <div class="feature-card highlight tilt" onclick="document.querySelector('[data-target=report]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-exclamation-triangle"></i></div>
-                        <h3>Report Incident</h3>
-                        <p>Securely report malpractice and protect our democracy.</p>
+                        <div class="icon-wrapper"><i class="fas fa-shield-virus"></i></div>
+                        <h3>Report Malpractice</h3>
+                        <p>Protect the pulse of democracy by reporting incidents securely.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Leaderboard Section -->
-            <section id="leaderboard" class="view-section hidden">
+            <!-- Democracy Pulse Section (Interactive Map) -->
+            <section id="pulse" class="view-section hidden">
                 <div class="section-header">
-                    <h2>Citizen Leaderboard</h2>
-                    <p>The Top 50 Most Informed Voters in India</p>
+                    <h2>National Democracy Pulse</h2>
+                    <p>Interactive Map showing live (simulated) civic engagement across India.</p>
                 </div>
-                <div class="leaderboard-wrapper">
-                    <div class="podium" id="podium-container">
-                        <!-- Top 3 generated here -->
+                <div class="map-container-3d">
+                    <div class="map-stats-overlay" id="map-stats">
+                        <h3>Select a state on the map</h3>
+                        <p>Hover to see engagement levels.</p>
                     </div>
-                    <div class="rankings-table">
-                        <div class="table-header">
-                            <span>Rank</span>
-                            <span>Citizen Name</span>
-                            <span>Democracy Score</span>
-                        </div>
-                        <div class="table-body" id="leaderboard-body">
-                            <!-- Ranks 4-50 generated here -->
-                        </div>
+                    <div class="india-map-wrapper">
+                        <!-- Stylized SVG Map of India (Simplified) -->
+                        <svg id="india-svg" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Placeholder paths for demo - 5 major regions -->
+                            <path class="state-path" id="MH" data-name="Maharashtra" d="M200,500 L300,450 L400,550 L350,650 L250,600 Z" />
+                            <path class="state-path" id="UP" data-name="Uttar Pradesh" d="M350,250 L500,200 L600,300 L550,400 L400,350 Z" />
+                            <path class="state-path" id="KA" data-name="Karnataka" d="M250,650 L350,600 L400,750 L300,850 L200,800 Z" />
+                            <path class="state-path" id="DL" data-name="Delhi" d="M380,280 L420,280 L420,320 L380,320 Z" />
+                            <path class="state-path" id="TN" data-name="Tamil Nadu" d="M350,750 L450,700 L500,850 L400,900 Z" />
+                            <!-- Abstract Pulse Circles -->
+                            <circle class="pulse-ring" cx="300" cy="550" r="10" />
+                            <circle class="pulse-ring" cx="450" cy="300" r="15" />
+                        </svg>
                     </div>
                 </div>
             </section>
 
-            <!-- Electoral Search Section -->
+            <!-- Civic Passport Section -->
+            <section id="passport" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Your Digital Civic Passport</h2>
+                    <p>Track your personal milestones and earn official digital stamps.</p>
+                </div>
+                <div class="passport-display">
+                    <div class="passport-card">
+                        <div class="passport-header">
+                            <div class="passport-coat-of-arms"><i class="fas fa-dharmachakra"></i></div>
+                            <div class="passport-title">CIVIC PASSPORT</div>
+                            <div class="passport-subtitle">REPUBLIC OF INDIA DEMOCRACY HUB</div>
+                        </div>
+                        <div class="passport-body">
+                            <div class="passport-photo">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="passport-info">
+                                <div class="info-row"><span>NAME:</span> <strong id="passport-name">VALUED CITIZEN</strong></div>
+                                <div class="info-row"><span>ID:</span> <strong id="passport-id">DH-2026-IN</strong></div>
+                                <div class="info-row"><span>LEVEL:</span> <strong id="passport-level">NEWBIE VOTER</strong></div>
+                                <div class="info-row"><span>SCORE:</span> <strong id="passport-score">0</strong></div>
+                            </div>
+                        </div>
+                        <div class="passport-stamps" id="stamps-container">
+                            <div class="stamp-slot" data-stamp="quiz" title="Quiz Completed"><i class="fas fa-check"></i></div>
+                            <div class="stamp-slot" data-stamp="search" title="Electoral Roll Searched"><i class="fas fa-search"></i></div>
+                            <div class="stamp-slot" data-stamp="locator" title="Booth Located"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="stamp-slot" data-stamp="knowledge" title="Knowledge Base Expert"><i class="fas fa-book"></i></div>
+                            <div class="stamp-slot" data-stamp="report" title="Democracy Guardian"><i class="fas fa-shield-alt"></i></div>
+                        </div>
+                    </div>
+                    <button class="btn primary large" id="download-passport-btn"><i class="fas fa-download"></i> Download Digital Certificate</button>
+                </div>
+            </section>
+
+            <!-- (Rest of sections remain similar but with updated themes) -->
             <section id="search" class="view-section hidden">
-                <div class="section-header">
-                    <h2>Electoral Roll Search</h2>
-                    <p>Verify your details in the voter list.</p>
-                </div>
+                <div class="section-header"><h2>Electoral Search</h2><p>Search the roll and earn your 'Verified Search' stamp.</p></div>
                 <div class="form-container">
                     <div class="search-box">
-                        <input type="text" id="epic-input" placeholder="Enter your EPIC Number (e.g., ABC1234567)">
-                        <button id="search-voter-btn" class="btn primary"><i class="fas fa-search"></i> Search</button>
+                        <input type="text" id="epic-input" placeholder="Enter EPIC Number">
+                        <button id="search-voter-btn" class="btn primary">Search</button>
                     </div>
-                    <div id="search-results" class="results-panel hidden">
-                        <!-- Dynamic results will be injected here -->
-                    </div>
+                    <div id="search-results" class="results-panel hidden"></div>
                 </div>
             </section>
 
-            <!-- Booth Locator Section -->
             <section id="locator" class="view-section hidden">
-                <div class="section-header">
-                    <h2>Polling Booth Locator</h2>
-                    <p>Find nearby polling stations using Google Maps.</p>
-                </div>
+                <div class="section-header"><h2>Booth Locator</h2><p>Locate your booth and earn the 'Navigator' stamp.</p></div>
                 <div class="map-wrapper">
-                    <div class="map-controls">
-                        <button id="find-me-btn" class="btn primary"><i class="fas fa-crosshairs"></i> Find Booths Near Me</button>
-                        <span id="location-status">Waiting for location...</span>
-                    </div>
-                    <div class="iframe-container" id="map-container">
-                        <div class="map-placeholder">
-                            <i class="fas fa-map-marked-alt"></i>
-                            <p>Click "Find Booths Near Me" to load the map.</p>
-                        </div>
-                    </div>
+                    <button id="find-me-btn" class="btn primary"><i class="fas fa-crosshairs"></i> Find Booths</button>
+                    <div class="iframe-container" id="map-container"></div>
                 </div>
             </section>
 
-            <!-- Report Incident Section -->
             <section id="report" class="view-section hidden">
-                <div class="section-header">
-                    <h2>Report Election Malpractice</h2>
-                    <p>Securely report booth capturing, intimidation, or EVM issues.</p>
-                </div>
+                <div class="section-header"><h2>Report Incident</h2><p>Become a 'Democracy Guardian' by reporting malpractice.</p></div>
                 <div class="form-container">
                     <form id="incident-form" class="incident-form">
-                        <div class="form-group">
-                            <label>Incident Type</label>
-                            <select id="incident-type" required>
-                                <option value="" disabled selected>Select an issue...</option>
-                                <option value="Booth Capturing">Booth Capturing</option>
-                                <option value="Voter Intimidation">Voter Intimidation</option>
-                                <option value="EVM Malfunction">EVM Malfunction</option>
-                                <option value="Fake Voting">Fake Voting / Impersonation</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea id="incident-desc" rows="4" placeholder="Provide details of the incident..." required></textarea>
-                        </div>
-                        <div class="form-group location-group">
-                            <label>GPS Location <span class="required">*</span></label>
-                            <div class="loc-input-wrapper">
-                                <input type="text" id="incident-location" readonly placeholder="Fetching location automatically..." required>
-                                <button type="button" id="refresh-loc-btn" class="btn secondary small"><i class="fas fa-sync"></i> Refresh</button>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn primary large w-100"><i class="fas fa-paper-plane"></i> Submit Secure Report</button>
+                        <select id="incident-type" required><option value="Booth Capturing">Booth Capturing</option></select>
+                        <textarea id="incident-desc" required placeholder="Details..."></textarea>
+                        <input type="text" id="incident-location" readonly placeholder="Fetching location...">
+                        <button type="submit" class="btn primary w-100">Submit Report</button>
                     </form>
-                    <div id="report-success" class="results-panel success hidden">
-                        <i class="fas fa-check-circle"></i>
-                        <h3>Report Submitted Successfully</h3>
-                        <p>Your incident report and GPS coordinates have been securely logged.</p>
-                    </div>
                 </div>
             </section>
 
-            <!-- Timeline Section -->
-            <section id="timeline" class="view-section hidden">
-                <div class="section-header">
-                    <h2>The Great Indian Election Cycle</h2>
-                    <p>How the massive democratic exercise unfolds.</p>
-                </div>
-                <div class="timeline-container"></div>
-            </section>
-
-            <!-- Steps Section -->
-            <section id="steps" class="view-section hidden">
-                <div class="section-header">
-                    <h2>Your Voter Journey</h2>
-                    <p>Essential steps for every responsible citizen.</p>
-                </div>
-                <div class="steps-container"></div>
-            </section>
-
-            <!-- Flashcards Section -->
-            <section id="flashcards" class="view-section hidden">
-                <div class="section-header">
-                    <h2>Knowledge Base</h2>
-                    <p>Flip to learn key electoral concepts.</p>
-                </div>
-                <div class="flashcard-container">
-                    <div class="flashcard" id="flashcard">
-                        <div class="flashcard-inner">
-                            <div class="flashcard-front">
-                                <div class="card-content" id="card-front-content">Loading...</div>
-                                <div class="flip-hint"><i class="fas fa-sync-alt"></i> Tap to reveal answer</div>
-                            </div>
-                            <div class="flashcard-back">
-                                <div class="card-content" id="card-back-content">Loading...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flashcard-controls">
-                    <button id="prev-card" class="btn secondary"><i class="fas fa-chevron-left"></i></button>
-                    <span id="card-counter">1 / 5</span>
-                    <button id="next-card" class="btn primary"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </section>
-
-            <!-- Quiz Section -->
-            <section id="quiz" class="view-section hidden">
-                <div class="section-header">
-                    <h2>Democracy Quiz Challenge</h2>
-                    <p>Test your knowledge of the Indian electoral system.</p>
-                </div>
-                
-                <div class="quiz-container">
-                    <div id="quiz-start" class="quiz-panel active">
-                        <i class="fas fa-award quiz-icon"></i>
-                        <h3>Ready to test your knowledge?</h3>
-                        <p>5 questions to prove you are a smart voter.</p>
-                        <button id="start-quiz-btn" class="btn primary large">Start Quiz</button>
-                    </div>
-
-                    <div id="quiz-active" class="quiz-panel hidden">
-                        <div class="quiz-progress">
-                            <div class="progress-bar" id="quiz-progress-bar"></div>
-                            <span id="quiz-question-counter">Question 1 of 5</span>
-                        </div>
-                        <h3 id="quiz-question" class="quiz-question-text">Question goes here?</h3>
-                        <div class="options-grid" id="quiz-options"></div>
-                    </div>
-
-                    <div id="quiz-result" class="quiz-panel hidden">
-                        <div class="score-circle">
-                            <span id="quiz-score">0</span>/5
-                        </div>
-                        <h3 id="quiz-feedback-title">Great Job!</h3>
-                        <p id="quiz-feedback-text">You have a solid understanding of the system.</p>
-                        <div class="leaderboard-submit" id="leaderboard-submit-form">
-                            <input type="text" id="leaderboard-name" placeholder="Enter your name to join rankings">
-                            <button id="submit-score-btn" class="btn primary">Submit to Leaderboard</button>
-                        </div>
-                        <button id="restart-quiz-btn" class="btn secondary">Try Again <i class="fas fa-redo"></i></button>
-                    </div>
-                </div>
-            </section>
+            <section id="timeline" class="view-section hidden"><div class="section-header"><h2>Election Timeline</h2></div><div class="timeline-container"></div></section>
+            <section id="steps" class="view-section hidden"><div class="section-header"><h2>Voter Journey</h2></div><div class="steps-container"></div></section>
+            <section id="flashcards" class="view-section hidden"><div class="section-header"><h2>Flashcards</h2></div><div class="flashcard-container"><div class="flashcard" id="flashcard"><div class="flashcard-inner"><div class="flashcard-front"><div id="card-front-content"></div></div><div class="flashcard-back"><div id="card-back-content"></div></div></div></div></div></section>
+            <section id="quiz" class="view-section hidden"><div class="section-header"><h2>Democracy Quiz</h2></div><div class="quiz-container"><div id="quiz-start" class="quiz-panel active"><button id="start-quiz-btn" class="btn primary">Start</button></div><div id="quiz-active" class="quiz-panel hidden"><h3 id="quiz-question"></h3><div class="options-grid" id="quiz-options"></div></div><div id="quiz-result" class="quiz-panel hidden"><h3>Score: <span id="quiz-score"></span>/5</h3><button id="restart-quiz-btn" class="btn secondary">Try Again</button></div></div></section>
         </main>
 
-        <!-- Floating AI Assistant -->
         <div class="assistant-widget">
-            <button class="assistant-toggle" id="assistant-toggle">
-                <i class="fas fa-robot"></i>
-            </button>
+            <button class="assistant-toggle" id="assistant-toggle"><i class="fas fa-robot"></i></button>
             <div class="chat-window hidden" id="chat-window">
-                <div class="chat-header">
-                    <span><i class="fas fa-robot"></i> ECI AI Assistant</span>
-                    <button id="close-chat"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="chat-messages" id="chat-messages">
-                    <div class="message bot">
-                        Namaskar! I'm your Voice AI Assistant. You can type or click the microphone to talk to me!
-                    </div>
-                </div>
+                <div class="chat-header"><span>ECI Voice Assistant</span><button id="close-chat"><i class="fas fa-times"></i></button></div>
+                <div class="chat-messages" id="chat-messages"></div>
                 <div class="chat-input-area">
                     <button id="voice-btn" class="mic-btn"><i class="fas fa-microphone"></i></button>
-                    <input type="text" id="chat-input" placeholder="Ask me something...">
+                    <input type="text" id="chat-input" placeholder="Talk to me...">
                     <button id="send-msg"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
     </div>
-    
     <script src="script.js"></script>
 </body>
 </html>
