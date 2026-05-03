@@ -88,6 +88,46 @@ app.post('/api/chat', (req, res) => {
     }, 500);
 });
 
+// 🏆 Leaderboard State (In-memory)
+let leaderboard = [
+    { name: "Arjun V.", score: 1450, rank: 1 },
+    { name: "Sanya M.", score: 1320, rank: 2 },
+    { name: "Rohan D.", score: 1280, rank: 3 },
+    { name: "Kiran P.", score: 1210, rank: 4 },
+    { name: "Meera K.", score: 1150, rank: 5 }
+];
+
+// Populate more mock data to show Top 50 potential
+for (let i = 6; i <= 50; i++) {
+    leaderboard.push({
+        name: `Citizen ${i}`,
+        score: Math.floor(Math.random() * 1000) + 100,
+        rank: i
+    });
+}
+
+// 🏆 Endpoint: Get Leaderboard
+app.get('/api/leaderboard', (req, res) => {
+    res.json(leaderboard.slice(0, 50));
+});
+
+// 🏆 Endpoint: Submit Score
+app.post('/api/submit-score', (req, res) => {
+    const { name, score } = req.body;
+    if (!name || score === undefined) return res.status(400).json({ error: "Name and score required" });
+
+    leaderboard.push({ name, score, rank: 0 });
+    leaderboard.sort((a, b) => b.score - a.score);
+    
+    // Re-assign ranks
+    leaderboard.forEach((user, index) => {
+        user.rank = index + 1;
+    });
+
+    leaderboard = leaderboard.slice(0, 50); // Keep only Top 50
+    res.json({ success: true, rank: leaderboard.find(u => u.name === name)?.rank || 51 });
+});
+
 // Fallback route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

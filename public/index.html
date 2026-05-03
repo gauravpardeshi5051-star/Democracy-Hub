@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="democracy-badge" id="democracy-badge">
+        <div class="points-label">Democracy Score</div>
+        <div class="points-value" id="total-points">0</div>
+        <div class="badge-level" id="badge-level">Newbie Voter</div>
+    </div>
+
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
@@ -18,6 +26,7 @@
             </div>
             <ul class="nav-links">
                 <li class="active" data-target="home"><i class="fas fa-home"></i> Dashboard</li>
+                <li data-target="leaderboard"><i class="fas fa-trophy"></i> Top 50 Rankings</li>
                 <li data-target="search"><i class="fas fa-search"></i> Electoral Search</li>
                 <li data-target="locator"><i class="fas fa-map-marker-alt"></i> Booth Locator</li>
                 <li data-target="report"><i class="fas fa-shield-alt"></i> Report Incident</li>
@@ -35,24 +44,47 @@
                 <header class="hero">
                     <div class="hero-badge">World's Largest Democracy</div>
                     <h1>Empowering Your <span>Voice</span></h1>
-                    <p>Navigate the Indian Election System with clarity. Locate your booth, search the electoral roll, report incidents, and test your civic knowledge.</p>
+                    <p>Experience the future of civic education. Earn points, climb the leaderboard, and learn about the world's largest democratic system.</p>
                 </header>
                 
                 <div class="features-grid">
-                    <div class="feature-card" onclick="document.querySelector('[data-target=search]').click()">
+                    <div class="feature-card tilt" onclick="document.querySelector('[data-target=leaderboard]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-trophy"></i></div>
+                        <h3>Top 50 Ranking</h3>
+                        <p>See where you stand among the most informed citizens of India.</p>
+                    </div>
+                    <div class="feature-card tilt" onclick="document.querySelector('[data-target=search]').click()">
                         <div class="icon-wrapper"><i class="fas fa-search"></i></div>
                         <h3>Electoral Search</h3>
-                        <p>Dynamically search the simulated electoral roll using your EPIC number.</p>
+                        <p>Verify your voter details and earn +10 points instantly.</p>
                     </div>
-                    <div class="feature-card" onclick="document.querySelector('[data-target=locator]').click()">
-                        <div class="icon-wrapper"><i class="fas fa-map-marked-alt"></i></div>
-                        <h3>Booth Locator</h3>
-                        <p>Find polling stations near your location using Google Maps.</p>
-                    </div>
-                    <div class="feature-card highlight" onclick="document.querySelector('[data-target=report]').click()">
+                    <div class="feature-card highlight tilt" onclick="document.querySelector('[data-target=report]').click()">
                         <div class="icon-wrapper"><i class="fas fa-exclamation-triangle"></i></div>
                         <h3>Report Incident</h3>
-                        <p>Report booth capturing or malpractice securely using your GPS location.</p>
+                        <p>Securely report malpractice and protect our democracy.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leaderboard Section -->
+            <section id="leaderboard" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Citizen Leaderboard</h2>
+                    <p>The Top 50 Most Informed Voters in India</p>
+                </div>
+                <div class="leaderboard-wrapper">
+                    <div class="podium" id="podium-container">
+                        <!-- Top 3 generated here -->
+                    </div>
+                    <div class="rankings-table">
+                        <div class="table-header">
+                            <span>Rank</span>
+                            <span>Citizen Name</span>
+                            <span>Democracy Score</span>
+                        </div>
+                        <div class="table-body" id="leaderboard-body">
+                            <!-- Ranks 4-50 generated here -->
+                        </div>
                     </div>
                 </div>
             </section>
@@ -85,7 +117,6 @@
                         <button id="find-me-btn" class="btn primary"><i class="fas fa-crosshairs"></i> Find Booths Near Me</button>
                         <span id="location-status">Waiting for location...</span>
                     </div>
-                    <!-- Google Maps Iframe Container -->
                     <div class="iframe-container" id="map-container">
                         <div class="map-placeholder">
                             <i class="fas fa-map-marked-alt"></i>
@@ -140,9 +171,7 @@
                     <h2>The Great Indian Election Cycle</h2>
                     <p>How the massive democratic exercise unfolds.</p>
                 </div>
-                <div class="timeline-container">
-                    <!-- Timeline items injected via JS -->
-                </div>
+                <div class="timeline-container"></div>
             </section>
 
             <!-- Steps Section -->
@@ -151,9 +180,7 @@
                     <h2>Your Voter Journey</h2>
                     <p>Essential steps for every responsible citizen.</p>
                 </div>
-                <div class="steps-container">
-                    <!-- Steps injected via JS -->
-                </div>
+                <div class="steps-container"></div>
             </section>
 
             <!-- Flashcards Section -->
@@ -203,9 +230,7 @@
                             <span id="quiz-question-counter">Question 1 of 5</span>
                         </div>
                         <h3 id="quiz-question" class="quiz-question-text">Question goes here?</h3>
-                        <div class="options-grid" id="quiz-options">
-                            <!-- Options injected via JS -->
-                        </div>
+                        <div class="options-grid" id="quiz-options"></div>
                     </div>
 
                     <div id="quiz-result" class="quiz-panel hidden">
@@ -214,6 +239,10 @@
                         </div>
                         <h3 id="quiz-feedback-title">Great Job!</h3>
                         <p id="quiz-feedback-text">You have a solid understanding of the system.</p>
+                        <div class="leaderboard-submit" id="leaderboard-submit-form">
+                            <input type="text" id="leaderboard-name" placeholder="Enter your name to join rankings">
+                            <button id="submit-score-btn" class="btn primary">Submit to Leaderboard</button>
+                        </div>
                         <button id="restart-quiz-btn" class="btn secondary">Try Again <i class="fas fa-redo"></i></button>
                     </div>
                 </div>
@@ -232,11 +261,12 @@
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     <div class="message bot">
-                        Namaskar! I'm your Indian Election Assistant. Ask me anything about EVMs, Voter IDs, or the Election Commission.
+                        Namaskar! I'm your Voice AI Assistant. You can type or click the microphone to talk to me!
                     </div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" id="chat-input" placeholder="e.g. How to use an EVM?">
+                    <button id="voice-btn" class="mic-btn"><i class="fas fa-microphone"></i></button>
+                    <input type="text" id="chat-input" placeholder="Ask me something...">
                     <button id="send-msg"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
