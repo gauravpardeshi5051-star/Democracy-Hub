@@ -20,7 +20,13 @@ app.get('/api/pulse-data', (req, res) => {
         { id: 'UP', name: 'Uttar Pradesh', engagement: 'Critical', topSearch: 'EVM Security', users: 32100 },
         { id: 'KA', name: 'Karnataka', engagement: 'High', topSearch: 'Booth Locator', users: 8900 },
         { id: 'DL', name: 'Delhi', engagement: 'Extreme', topSearch: 'ECI Assistant', users: 15600 },
-        { id: 'TN', name: 'Tamil Nadu', engagement: 'Medium', topSearch: 'NOTA Options', users: 7200 }
+        { id: 'TN', name: 'Tamil Nadu', engagement: 'Medium', topSearch: 'NOTA Options', users: 7200 },
+        { id: 'JK', name: 'Jammu & Kashmir', engagement: 'Medium', topSearch: 'Election Dates', users: 4500 },
+        { id: 'RJ', name: 'Rajasthan', engagement: 'High', topSearch: 'Voter ID Status', users: 11200 },
+        { id: 'MP', name: 'Madhya Pradesh', engagement: 'High', topSearch: 'MCC Rules', users: 9800 },
+        { id: 'BR', name: 'Bihar', engagement: 'Critical', topSearch: 'Booth Details', users: 24500 },
+        { id: 'WB', name: 'West Bengal', engagement: 'Critical', topSearch: 'Polling Schedule', users: 21300 },
+        { id: 'GJ', name: 'Gujarat', engagement: 'High', topSearch: 'EPIC Search', users: 13400 }
     ];
     res.json(states);
 });

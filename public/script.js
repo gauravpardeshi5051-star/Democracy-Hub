@@ -201,4 +201,72 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = `perspective(1000px) rotateY(${x * 20}deg) rotateX(${y * -20}deg)`;
         });
     });
+    // --- Timeline & Steps Populate ---
+    const timelineData = [
+        { date: 'Phase 1', title: 'Announcement & MCC', desc: 'Election Commission announces schedule. Model Code of Conduct comes into effect.' },
+        { date: 'Phase 2', title: 'Nominations', desc: 'Candidates file their nomination papers. Scrutiny and withdrawal period follows.' },
+        { date: 'Phase 3', title: 'Campaigning', desc: 'Parties release manifestos, hold rallies. Ends 48 hours before polling.' },
+        { date: 'Phase 4', title: 'Polling Days', desc: 'Voting takes place in multiple phases across different states using EVMs.' },
+        { date: 'Phase 5', title: 'Counting & Results', desc: 'EVMs are opened, votes are counted under strict security, and results are declared.' }
+    ];
+
+    const stepsData = [
+        { icon: 'fa-search', title: 'Check Electoral Roll', desc: 'Verify your name is on the voter list online at the NVSP portal or via SMS.' },
+        { icon: 'fa-id-card', title: 'Carry Valid ID', desc: 'Bring your Voter ID (EPIC) or any other ECI-approved photo ID to the polling booth.' },
+        { icon: 'fa-map-marker-alt', title: 'Locate Polling Booth', desc: 'Find your designated polling station. Mobile phones are usually not allowed inside.' },
+        { icon: 'fa-fingerprint', title: 'Identity Verification', desc: 'Polling officers check your ID, mark your finger with indelible ink, and give you a slip.' },
+        { icon: 'fa-box-open', title: 'Use EVM & VVPAT', desc: 'Press the blue button against your chosen candidate. Check the VVPAT slip for 7 seconds to verify.' }
+    ];
+
+    const flashcardsData = [
+        { front: 'What is ECI?', back: 'The Election Commission of India (ECI) is an autonomous constitutional authority responsible for administering election processes in India.' },
+        { front: 'What is an EVM?', back: 'Electronic Voting Machine (EVM) is used for casting and counting votes. It consists of a Control Unit and a Balloting Unit.' },
+        { front: 'What is VVPAT?', back: 'Voter Verifiable Paper Audit Trail (VVPAT) allows voters to verify that their vote was cast correctly via a paper slip.' },
+        { front: 'What is NOTA?', back: 'None of the Above (NOTA) allows voters to officially register a vote of rejection for all candidates.' },
+        { front: 'What is MCC?', back: 'Model Code of Conduct (MCC) is a set of guidelines issued by ECI for political parties and candidates during elections.' }
+    ];
+
+    const timelineContainer = document.querySelector('.timeline-container');
+    if (timelineContainer) {
+        timelineData.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+            div.innerHTML = `<div class="timeline-content"><span class="timeline-date">${item.date}</span><h3>${item.title}</h3><p>${item.desc}</p></div>`;
+            timelineContainer.appendChild(div);
+        });
+    }
+
+    const stepsContainer = document.querySelector('.steps-container');
+    if (stepsContainer) {
+        stepsData.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'step-card';
+            div.innerHTML = `<div class="step-number">0${index+1}</div><div class="icon-wrapper" style="font-size: 2rem; color: var(--primary); min-width: 50px; text-align: center;"><i class="fas ${item.icon}"></i></div><div class="step-details"><h3>${item.title}</h3><p>${item.desc}</p></div>`;
+            stepsContainer.appendChild(div);
+        });
+    }
+
+    // Flashcard Logic
+    let currentCardIndex = 0;
+    function updateFlashcard() {
+        const front = document.getElementById('card-front-content');
+        const back = document.getElementById('card-back-content');
+        if (front && back) {
+            front.textContent = flashcardsData[currentCardIndex].front;
+            back.textContent = flashcardsData[currentCardIndex].back;
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+    }
+    updateFlashcard();
+
+    document.getElementById('prev-card')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentCardIndex = (currentCardIndex - 1 + flashcardsData.length) % flashcardsData.length;
+        updateFlashcard();
+    });
+    document.getElementById('next-card')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
+        updateFlashcard();
+    });
 });
