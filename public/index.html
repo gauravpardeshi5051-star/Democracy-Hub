@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Democracy Hub: Indian Elections</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-dharmachakra"></i>
+                <span>Democracy Hub</span>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="home"><i class="fas fa-home"></i> Dashboard</li>
+                <li data-target="timeline"><i class="fas fa-calendar-alt"></i> Election Phases</li>
+                <li data-target="steps"><i class="fas fa-shoe-prints"></i> Voter Journey</li>
+                <li data-target="flashcards"><i class="fas fa-layer-group"></i> Knowledge Base</li>
+                <li data-target="quiz"><i class="fas fa-clipboard-check"></i> Civics Quiz</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="view-section active">
+                <header class="hero">
+                    <div class="hero-badge">World's Largest Democracy</div>
+                    <h1>Empowering Your <span>Voice</span></h1>
+                    <p>Navigate the Indian Election System with clarity. Learn the process, track phases, and test your civic knowledge.</p>
+                </header>
+                
+                <div class="features-grid">
+                    <div class="feature-card" onclick="document.querySelector('[data-target=steps]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-id-card-clip"></i></div>
+                        <h3>Voter Journey</h3>
+                        <p>Step-by-step guide from registration to casting your vote using EVM & VVPAT.</p>
+                    </div>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=flashcards]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-book-reader"></i></div>
+                        <h3>Learn Concepts</h3>
+                        <p>Interactive flashcards covering ECI, Lok Sabha, NOTA, and more.</p>
+                    </div>
+                    <div class="feature-card highlight" onclick="document.querySelector('[data-target=quiz]').click()">
+                        <div class="icon-wrapper"><i class="fas fa-trophy"></i></div>
+                        <h3>Take the Quiz</h3>
+                        <p>Challenge yourself with our award-winning interactive civics quiz.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Timeline Section -->
+            <section id="timeline" class="view-section hidden">
+                <div class="section-header">
+                    <h2>The Great Indian Election Cycle</h2>
+                    <p>How the massive democratic exercise unfolds.</p>
+                </div>
+                <div class="timeline-container">
+                    <!-- Timeline items injected via JS -->
+                </div>
+            </section>
+
+            <!-- Steps Section -->
+            <section id="steps" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Your Voter Journey</h2>
+                    <p>Essential steps for every responsible citizen.</p>
+                </div>
+                <div class="steps-container">
+                    <!-- Steps injected via JS -->
+                </div>
+            </section>
+
+            <!-- Flashcards Section -->
+            <section id="flashcards" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Knowledge Base</h2>
+                    <p>Flip to learn key electoral concepts.</p>
+                </div>
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="card-content" id="card-front-content">Loading...</div>
+                                <div class="flip-hint"><i class="fas fa-sync-alt"></i> Tap to reveal answer</div>
+                            </div>
+                            <div class="flashcard-back">
+                                <div class="card-content" id="card-back-content">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-controls">
+                    <button id="prev-card" class="btn secondary"><i class="fas fa-chevron-left"></i></button>
+                    <span id="card-counter">1 / 5</span>
+                    <button id="next-card" class="btn primary"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Democracy Quiz Challenge</h2>
+                    <p>Test your knowledge of the Indian electoral system.</p>
+                </div>
+                
+                <div class="quiz-container">
+                    <div id="quiz-start" class="quiz-panel active">
+                        <i class="fas fa-award quiz-icon"></i>
+                        <h3>Ready to test your knowledge?</h3>
+                        <p>5 questions to prove you are a smart voter.</p>
+                        <button id="start-quiz-btn" class="btn primary large">Start Quiz</button>
+                    </div>
+
+                    <div id="quiz-active" class="quiz-panel hidden">
+                        <div class="quiz-progress">
+                            <div class="progress-bar" id="quiz-progress-bar"></div>
+                            <span id="quiz-question-counter">Question 1 of 5</span>
+                        </div>
+                        <h3 id="quiz-question" class="quiz-question-text">Question goes here?</h3>
+                        <div class="options-grid" id="quiz-options">
+                            <!-- Options injected via JS -->
+                        </div>
+                    </div>
+
+                    <div id="quiz-result" class="quiz-panel hidden">
+                        <div class="score-circle">
+                            <span id="quiz-score">0</span>/5
+                        </div>
+                        <h3 id="quiz-feedback-title">Great Job!</h3>
+                        <p id="quiz-feedback-text">You have a solid understanding of the system.</p>
+                        <button id="restart-quiz-btn" class="btn secondary">Try Again <i class="fas fa-redo"></i></button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating AI Assistant -->
+        <div class="assistant-widget">
+            <button class="assistant-toggle" id="assistant-toggle">
+                <i class="fas fa-robot"></i>
+            </button>
+            <div class="chat-window hidden" id="chat-window">
+                <div class="chat-header">
+                    <span><i class="fas fa-robot"></i> ECI AI Assistant</span>
+                    <button id="close-chat"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot">
+                        Namaskar! I'm your Indian Election Assistant. Ask me anything about EVMs, Voter IDs, or the Election Commission.
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="e.g. How to use an EVM?">
+                    <button id="send-msg"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
